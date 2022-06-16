@@ -841,6 +841,8 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
         [getMangledCellContent, setOverlaySimple]
     );
 
+    const overscrollY = p.overscrollY ?? 0
+
     const scrollTo = React.useCallback(
         (
             col: number,
@@ -889,8 +891,8 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
 
                         if (sTop > bounds.y) {
                             scrollY = bounds.y - sTop;
-                        } else if (sBottom < bounds.y + bounds.height) {
-                            scrollY = bounds.y + bounds.height - sBottom;
+                        } else if (sBottom < bounds.y + bounds.height + overscrollY) {
+                            scrollY = bounds.y + bounds.height + overscrollY - sBottom;
                         }
 
                         if (dir === "vertical" || col < freezeColumns) {
@@ -909,7 +911,7 @@ const DataEditorImpl: React.ForwardRefRenderFunction<DataEditorRef, DataEditorPr
                 }
             }
         },
-        [rowMarkerOffset, rowMarkerWidth, totalHeaderHeight, lastRowSticky, freezeColumns, columns, rowHeight, rows]
+        [rowMarkerOffset, rowMarkerWidth, totalHeaderHeight, lastRowSticky, freezeColumns, columns, rowHeight, rows, overscrollY]
     );
 
     const focusCallback = React.useRef(focusOnRowFromTrailingBlankRow);

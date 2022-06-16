@@ -1222,7 +1222,7 @@ function drawCells(
 
                     const rowTheme = getRowThemeOverride?.(row);
                     const trailingTheme =
-                        isSticky && c.trailingRowOptions?.themeOverride !== undefined
+                        c.trailingRowOptions?.themeOverride !== undefined
                             ? c.trailingRowOptions?.themeOverride
                             : undefined;
                     const theme =

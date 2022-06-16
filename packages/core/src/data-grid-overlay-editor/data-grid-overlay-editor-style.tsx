@@ -61,6 +61,9 @@ export const DataGridOverlayEditorStyle = styled.div<Props>`
         }
 
         & input.gdg-input {
+            margin-top: -1.5px;
+            margin-left: 1px;
+
             width: 100%;
             border: none;
             border-width: 0;
@@ -68,6 +71,9 @@ export const DataGridOverlayEditorStyle = styled.div<Props>`
         }
 
         & textarea.gdg-input {
+            margin-top: 0.5px;
+            margin-left: 1px;
+
             border: none;
             border-width: 0;
             outline: none;

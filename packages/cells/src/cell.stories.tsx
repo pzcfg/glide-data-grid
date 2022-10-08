@@ -1,6 +1,6 @@
 import { styled } from "@linaria/react";
 import * as React from "react";
-import { DataEditor, DataEditorProps, GridCell, GridCellKind, GridColumn } from "@glideapps/glide-data-grid";
+import { DataEditor, DataEditorProps, GridCell, GridCellKind, GridColumn, Item, CellClickedEventArgs } from "@glideapps/glide-data-grid";
 import { DropdownCell as DropdownRenderer, useExtraCells } from ".";
 import type { StarCell } from "./cells/star-cell";
 import type { SparklineCell } from "./cells/sparkline-cell";
@@ -580,9 +580,22 @@ export const CustomTreeCell: React.VFC = () => {
         [columns, rows]
     );
 
-    // const { drawCell, onCellClicked } = useCustomCells([CustomTreeCellRenderer]);
-
     const cellProps = useExtraCells();
+
+    const customCellClicked = (fallback?: ((item: Item, event: CellClickedEventArgs) => void) | undefined) => {
+        return (item: Item, event: CellClickedEventArgs) => {
+            const cell = getCellContent(item);
+            if (cell.kind !== GridCellKind.Custom) {
+                fallback?.(item, event);
+                return;
+            }
+
+            const renderer = cellProps.customRenderers.find(x => x.isMatch(cell))
+            renderer?.onCellClicked(cell, event, () => {
+                setRoot({...root});
+            });
+        };
+    }
 
     return (
         <BeautifulWrapper
@@ -599,14 +612,9 @@ export const CustomTreeCell: React.VFC = () => {
                 {...defaultProps}
                 {...cellProps}
                 getCellContent={getCellContent}
-                onCellClicked={(item, event) => {
-                    const cell = getCellContent(item);
-                    /*
-                    onCellClicked(cell, event, () => {
-                        setRoot({...root});
-                    })
-                    */
-                }}
+                onCellClicked={customCellClicked((item) => {
+                    alert(`Cell ${item[0]}, ${item[1]} clicked`);
+                })}
                 columns={columns}
                 rowMarkers={"none"}
                 rows={rows.length}

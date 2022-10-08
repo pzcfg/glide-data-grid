@@ -7,6 +7,7 @@ import type {
     CustomCell,
     ProvideEditorCallback,
     BaseGridMouseEventArgs,
+    CellClickedEventArgs,
 } from "../data-grid-types";
 
 export interface BaseDrawArgs {
@@ -90,6 +91,7 @@ export interface InternalCellRenderer<T extends InnerGridCell> extends BaseCellR
 /** @category Renderers */
 export interface CustomRenderer<T extends CustomCell = CustomCell> extends BaseCellRenderer<T> {
     readonly isMatch: (cell: CustomCell) => cell is T;
+    readonly onCellClicked?: (cell: T, event: CellClickedEventArgs, callback: (...args: any[]) => any) => void;
     readonly onPaste?: (val: string, cellData: T["data"]) => T["data"] | undefined;
 }
 

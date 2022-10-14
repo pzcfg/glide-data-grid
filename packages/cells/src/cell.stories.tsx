@@ -12,7 +12,7 @@ import type { DropdownCell } from "./cells/dropdown-cell";
 import type { ArticleCell } from "./cells/article-cell-types";
 import type { RangeCell } from "./cells/range-cell";
 import type { SpinnerCell } from "./cells/spinner-cell";
-import type { TreeNode } from "./cells/tree-cell";
+import TreeCellRenderer from "./cells/tree-cell";
 import { useResizeDetector } from "react-resize-detector";
 
 import "@toast-ui/editor/dist/toastui-editor.css";
@@ -601,11 +601,22 @@ export const CustomTreeCell: React.VFC = () => {
                 getCellContent={getCellContent}
                 onCellClicked={(item, event) => {
                     const cell = getCellContent(item);
-                    /*
-                    onCellClicked(cell, event, () => {
-                        setRoot({...root});
-                    })
-                    */
+
+                    if (cell.kind !== GridCellKind.Custom) return;
+                    if (!TreeCellRenderer.isMatch(cell)) return;
+
+                    const { node } = cell.data;
+
+                    const { depth } = node;
+                    const { localEventX, preventDefault } = event;
+
+                    const depthOffset = (depth || 0) * 20;
+                    if (localEventX < depthOffset || localEventX > depthOffset + 22) return;
+
+                    preventDefault();
+                    node.collapsed = !node.collapsed;
+
+                    setRoot({...root});
                 }}
                 columns={columns}
                 rowMarkers={"none"}
